@@ -2,7 +2,7 @@
 // 界面集
 'use strict';
 atd.ui={};
-atd.ui.TopTipCanvas=atd.tool.Element('div',null,
+atd.ui.TopTipCanvas=atd.tool.element('div',null,
 {
 		position: 'fixed',
 		top: '0px',
@@ -20,7 +20,7 @@ atd.ui.TopTip=function()
 	var top=null;
 	this.TopTip.pop=function(html,delay)
 	{
-		var tip=atd.tool.Element('div',null,
+		var tip=atd.tool.element('div',null,
 		{
 			'background-color': '#1ea0fd',
 			padding: '1em 3em 1em 1.5em',
@@ -35,14 +35,14 @@ atd.ui.TopTip=function()
 		tip.close=function (delay_close)
 		{
 			var delay_close=delay_close||300;
-			atd.tool.addCss(this,{opacity: '0',transition:'opacity '+delay_close+'ms ease-out'});
+			atd.tool.objCss(this,{opacity: '0',transition:'opacity '+delay_close+'ms ease-out'});
 			setTimeout(
 			function()
 			{
 				TopTips.removeChild(tip);
 			},delay_close);
 		}
-		var close=atd.tool.Element('div',null,
+		var close=atd.tool.element('div',null,
 			{
 				'border-radius': '50%',
 				content: ' ',
@@ -57,7 +57,7 @@ atd.ui.TopTip=function()
 				'box-shadow':' 0 0 1px 1px #888',
 			}
 		);
-		var textnode=atd.tool.Element('div');
+		var textnode=atd.tool.element('div');
 		textnode.innerHTML=html;
 
 		tip.appendChild(textnode);

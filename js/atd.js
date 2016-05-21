@@ -4,6 +4,10 @@ var atd={};
 console.log('--== ATD JS Kits v 0.1 ==--');
 atd.version=0.1;
 atd.doc=document;
+atd.localStorage=function()
+{
+
+};
 atd.style=document.body.style;
 atd.css_prefix = function() {
   var styles = window.getComputedStyle(document.documentElement, '');
