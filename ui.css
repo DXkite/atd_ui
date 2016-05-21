@@ -1,0 +1,42 @@
+html,body{
+	padding: 0;
+	margin: 0;
+}
+
+
+#btn-popinfo:hover {
+    background-color:  #f44336;
+    color: white;
+}
+
+.popinfo
+{
+	background-color: #1ea0fd;
+	padding: 1em 3em 1em 1.5em;
+	color: white;
+	display: block;
+	opacity: 0;
+	margin-bottom: 0.2em;
+	cursor: pointer;
+}
+
+.popinfo .close
+{
+	border-radius: 50%;
+	content: ' ';
+	position:absolute;
+	right: 1em;
+	top: 1em;
+	height: 1em;
+	width: 1em;
+	display: block;
+	transition:0.3s;
+	background-color: #fff566;
+	box-shadow: 0 0 1px 1px #888;
+	opacity: 0;
+}
+
+.popinfo:hover .close
+{
+	opacity: 1;
+}
