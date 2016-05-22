@@ -2,10 +2,10 @@
 
 'use strict';
 atd.tool.objOn(window,{'load':
-	function(){
+function(){
+
  	var poptip=new atd.ui.PopTip();
-	poptip.pop('提示',300).show();
-	poptip.pop('提示2',600).show();
+ 	atd.ui.PopTip('A PopTip Simple Test').show();
  	var popbtn=document.getElementById('btn-popinfo');
  	console.timeEnd('createDivs');
 	var chick_times=2000;

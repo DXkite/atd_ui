@@ -138,6 +138,8 @@ atd.tool.cacheCss=function(name,callback) {
 				}
 			}
 			window.localStorage.setItem(name,css);
+			if (window.localStorage[name]===undefined)
+				console.log('atd.tool.cacheCss:data is to big to save');
 			atd.css.innerHTML=css;
 		}
 		else

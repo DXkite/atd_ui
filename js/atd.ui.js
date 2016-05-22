@@ -3,7 +3,6 @@
 'use strict';
 atd.ui={};
 
-
 atd.ui.TopTip=function()
 {
 	if (!atd.ui.TopTipDiv)
@@ -87,14 +86,13 @@ atd.ui.TopTip=function()
 	return this.TopTip;
 }
 
-atd.ui.PopTip=function()
+atd.ui.PopTip=function(text,time,attr,css)
 {	
 	if (!atd.ui.PopTipCss)
 		atd.ui.PopTipCss=
 		{
 			'background-color':'rgba(0,0,0,0.75)',
 			'border-radius':'0.5em',
-			//'box-shadow':'0 0 1px 2px #888',
 			'color':'white',
 			display:'inline-block',
 			padding:'0.8em',
@@ -115,9 +113,8 @@ atd.ui.PopTip=function()
 		atd.ui.PopTipQueue.push({msg:text,time:time,attr:attr,css:css});
 		return this;
 	}
-	
-	var ingnore=false;
-
+	if (!atd.ui.PopTipIngnore)
+		atd.ui.PopTipIngnore=false;
 	function show()
 	{
 		var next=atd.ui.PopTipQueue.shift();
@@ -129,31 +126,32 @@ atd.ui.PopTip=function()
 			var timeout=next.time || 2000;
 			var close=function()
 			{
-				atd.tool.objCss(div,{'transition':'0.3s ease-in',opacity:0});
+				atd.tool.objCss(div,{'transition':'0.3s ease-out',opacity:0});
 				setTimeout(function(){
 					atd.doc.body.removeChild(div);
 					show();	
 					if (atd.ui.PopTipQueue.length===0)
-						ingnore=false;
+						atd.ui.PopTipIngnore=false;
 				},300);
 			}		
 			atd.doc.body.appendChild(div);
 			div.style.left=(atd.doc.body.clientWidth/2-div.clientWidth/2)+'px';
 			div.style.bottom='1em';
-			setTimeout(function(){atd.tool.objCss(div,{opacity:1});},300);
+			setTimeout(function(){atd.tool.objCss(div,{opacity:1,transition:'0.3s ease-in'});},300);
 			setTimeout(close,timeout);
 		}
 	}
-	
 	this.show=function()
 	{
-		if (ingnore===false)
+		if (atd.ui.PopTipIngnore===false)
 		{
 		 	show();	
-		 	ingnore=true;
+		 	atd.ui.PopTipIngnore=true;
 		}
 		return this;
 	};
+	if (arguments.length>0)
+		this.pop(text,time,attr,css);
 	return this;
 };
 atd.widget={};
