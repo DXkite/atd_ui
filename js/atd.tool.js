@@ -29,7 +29,8 @@ atd.tool.rtrim=function(text)
 
 atd.tool.prefixName=function(name)
 {
-	return typeof atd.style[name] === 'undefined'?atd.css_prefix+atd.tool.trim(name):atd.tool.trim(name);
+	var name=atd.tool.trim(name);
+	return typeof atd.style[name] === 'undefined'?atd.css_prefix+name:name;
 }
 
 atd.tool.objCss=function(obj,cssObj)

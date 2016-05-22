@@ -2,21 +2,26 @@
 // 界面集
 'use strict';
 atd.ui={};
-atd.ui.TopTipCanvas=atd.tool.element('div',null,
-{
-		position: 'fixed',
-		top: '0px',
-		left: '0px',
-		'max-height': '100%',
-		overflow:'auto',
-		margin: '0px',
-		padding:'0px',
-		width:'100%',
-});
-atd.doc.body.appendChild(atd.ui.TopTipCanvas);
+
+
 atd.ui.TopTip=function()
 {
-	var TopTips=atd.ui.TopTipCanvas;
+	if (!atd.ui.TopTipDiv)
+	{
+		atd.ui.TopTipDiv=atd.tool.element('div',null,
+		{
+				position: 'fixed',
+				top: '0px',
+				left: '0px',
+				'max-height': '100%',
+				overflow:'auto',
+				margin: '0px',
+				padding:'0px',
+				width:'100%',
+		});
+		atd.doc.body.appendChild(atd.ui.TopTipDiv);
+	}
+	var TopTips=atd.ui.TopTipDiv;
 	var top=null;
 	this.TopTip.pop=function(html,delay)
 	{
@@ -82,3 +87,90 @@ atd.ui.TopTip=function()
 
 	return this.TopTip;
 }
+
+atd.ui.PopTip=function()
+{	
+	// 绘制层
+	/*if (!atd.ui.PopTipDiv)
+	{
+		atd.ui.PopTipDiv=atd.tool.element('div',null,
+		{
+				position: 'fixed',
+				bottom: '0px',
+				left: '0px',
+				'max-height': '100%',
+				overflow:'auto',
+				margin: 'auto',
+				padding:'0px',
+				width:'100%',
+		});
+		atd.doc.body.appendChild(atd.ui.PopTipDiv);
+	}*/
+	if (!atd.ui.PopTipCss)
+		atd.ui.PopTipCss=
+		{
+			'background-color':'rgba(0,0,0,0.75)',
+			'border-radius':'0.5em',
+			'box-shadow':'0 0 1px 2px #ccc',
+			'color':'white',
+			display:'inline-block',
+			padding:'0.5em',
+			margin:'0.5em',
+			cursor:'pointer',
+			position:'fixed',
+			'text-algin':'center',
+			transition:'0.3s',
+			opacity:0,
+		};
+	// 顺序队列
+	if (!atd.ui.PopTipQueue)
+	{
+		atd.ui.PopTipQueue=new Array();
+	}
+	this.pop=function(text,time,attr,css)
+	{
+		atd.ui.PopTipQueue.push({msg:text,time:time,attr:attr,css:css});
+		return this;
+	}
+	
+	var ingnore=false;
+
+	function show()
+	{
+		var next=atd.ui.PopTipQueue.shift();
+		if (next)
+		{
+			var css=next.css||atd.ui.PopTipCss;
+			var div=atd.tool.element('div',next.attr,css);
+			div.innerHTML=next.msg;
+			
+			var timeout=next.time || 2000;
+			var close=function()
+			{
+				atd.tool.objCss(div,{'transition':'0.3s',opacity:0});
+				setTimeout(function(){
+					atd.doc.body.removeChild(div);
+					show();	
+					if (atd.ui.PopTipQueue.length===0)
+						ingnore=false;
+				},300);
+			}		
+			atd.doc.body.appendChild(div);
+			atd.tool.objCss(div,{opacity:1});
+			div.style.left=(atd.doc.body.offsetWidth/2-div.offsetWidth/2)+'px';
+			setTimeout(close,timeout);
+		}
+	}
+	
+	this.show=function()
+	{
+		console.log('ingnore:'+ingnore);
+		if (ingnore===false)
+		{
+		 	show();	
+		 	ingnore=true;
+		}
+		return this;
+	};
+	return this;
+};
