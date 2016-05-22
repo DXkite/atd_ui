@@ -35,7 +35,6 @@ atd.ui.TopTip=function()
 			'margin-bottom': '0.4em',
 			cursor: 'pointer',
 			position:'relative'
-			//animation:'info_anim '+delay+'ms forwards'
 		});
 		tip.close=function (delay_close)
 		{
@@ -90,31 +89,15 @@ atd.ui.TopTip=function()
 
 atd.ui.PopTip=function()
 {	
-	// 绘制层
-	/*if (!atd.ui.PopTipDiv)
-	{
-		atd.ui.PopTipDiv=atd.tool.element('div',null,
-		{
-				position: 'fixed',
-				bottom: '0px',
-				left: '0px',
-				'max-height': '100%',
-				overflow:'auto',
-				margin: 'auto',
-				padding:'0px',
-				width:'100%',
-		});
-		atd.doc.body.appendChild(atd.ui.PopTipDiv);
-	}*/
 	if (!atd.ui.PopTipCss)
 		atd.ui.PopTipCss=
 		{
 			'background-color':'rgba(0,0,0,0.75)',
 			'border-radius':'0.5em',
-			'box-shadow':'0 0 1px 2px #ccc',
+			//'box-shadow':'0 0 1px 2px #888',
 			'color':'white',
 			display:'inline-block',
-			padding:'0.5em',
+			padding:'0.8em',
 			margin:'0.5em',
 			cursor:'pointer',
 			position:'fixed',
@@ -143,11 +126,10 @@ atd.ui.PopTip=function()
 			var css=next.css||atd.ui.PopTipCss;
 			var div=atd.tool.element('div',next.attr,css);
 			div.innerHTML=next.msg;
-			
 			var timeout=next.time || 2000;
 			var close=function()
 			{
-				atd.tool.objCss(div,{'transition':'0.3s',opacity:0});
+				atd.tool.objCss(div,{'transition':'0.3s ease-in',opacity:0});
 				setTimeout(function(){
 					atd.doc.body.removeChild(div);
 					show();	
@@ -156,15 +138,15 @@ atd.ui.PopTip=function()
 				},300);
 			}		
 			atd.doc.body.appendChild(div);
-			atd.tool.objCss(div,{opacity:1});
-			div.style.left=(atd.doc.body.offsetWidth/2-div.offsetWidth/2)+'px';
+			div.style.left=(atd.doc.body.clientWidth/2-div.clientWidth/2)+'px';
+			div.style.bottom='1em';
+			setTimeout(function(){atd.tool.objCss(div,{opacity:1});},300);
 			setTimeout(close,timeout);
 		}
 	}
 	
 	this.show=function()
 	{
-		console.log('ingnore:'+ingnore);
 		if (ingnore===false)
 		{
 		 	show();	
@@ -174,3 +156,8 @@ atd.ui.PopTip=function()
 	};
 	return this;
 };
+atd.widget={};
+atd.widget.Layouter=function(json,evtbind)
+{
+
+}

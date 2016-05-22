@@ -23,5 +23,4 @@ atd.tool.cacheCss('atd_main_css',
 	   'background-color':  '#f44336',
 	    color: 'white',
 	}
-
 });

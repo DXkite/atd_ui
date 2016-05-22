@@ -119,7 +119,8 @@ atd.tool.css=function(name,css) {
 
 // localStorage 缓存
 atd.tool.cacheCss=function(name,callback) {
-	var toptip=atd.ui.TopTip();
+	if (typeof name!== 'string' )
+		throw ('atd.tool.cacheCss:name must be string!');
 	if (window.localStorage)
 	{
 		if (window.localStorage[name]===undefined )
@@ -156,7 +157,6 @@ atd.tool.isArray=function (it) {
 
 atd.tool.ajax=function(type)
 {
-	var toptip=atd.ui.TopTip();
 	var ajax_object=new window.XMLHttpRequest || new ActiveXObject('Microsoft.XMLHTTP');
 
 	if (type)
@@ -166,7 +166,6 @@ atd.tool.ajax=function(type)
 			console.log(name+type[name]);
 		}
 	}
-
 	return ajax_object;
 }
 
