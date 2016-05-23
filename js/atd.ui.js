@@ -137,7 +137,7 @@ atd.ui.PopTip=function(text,time,attr,css)
 			atd.doc.body.appendChild(div);
 			div.style.left=(atd.doc.body.clientWidth/2-div.clientWidth/2)+'px';
 			div.style.bottom='1em';
-			setTimeout(function(){atd.tool.objCss(div,{opacity:1,transition:'0.3s ease-in'});},300);
+			setTimeout(function(){atd.tool.objCss(div,{opacity:1,transition:'0.1s ease-in'});},100);
 			setTimeout(close,timeout);
 		}
 	}
@@ -154,8 +154,113 @@ atd.ui.PopTip=function(text,time,attr,css)
 		this.pop(text,time,attr,css);
 	return this;
 };
-atd.widget={};
-atd.widget.Layouter=function(json,evtbind)
+atd.ui.register={};
+atd.ui.css={};
+atd.ui.UIRegister=function(name,builder)
 {
+	// if (atd.ui.register.hasOwnProperty(name)){
+	// 	throw 'mutil ui:"'+name+'" register';
+	// }
+	atd.ui.register[name]=builder;
+	return atd.ui.register;
+}
+atd.ui.UICss=function(name,css)
+{
+	if (!atd.ui.css[name]){
+		atd.tool.cacheCss(name,css);
+		atd.ui.css[name]=true;
+	}
+}
 
+atd.ui.UIBuilder=function(body,json,eventbind)
+{
+	if (typeof body !== 'object')
+		throw 'body must be objects';
+	var body=body||atd.doc.body;
+	var catch_object=[];
+
+	function createUI(obj,eventbind)
+	{
+		console.assert( obj.$ );
+		var attrs={};
+		var events={};
+		var child_objects=obj._;
+		var ui_name=obj.$;
+		var override=false;
+
+		if (obj.$) delete obj.$;
+		if (obj._) delete obj._;
+		var catch_id=null;
+		// 捕获ID
+		if (obj['#']){
+			if (eventbind && eventbind[obj['#']])
+				events=eventbind[obj['#']];
+			catch_id=obj['#'];
+			delete obj['#']; 
+		}
+
+		/*获取事件和属性*/
+		for (var name in obj) {
+			if (atd.tool.isFunction(obj[name])){
+				events[name]=obj[name];
+			}
+			else{
+				attrs[name]=obj[name];
+			}
+		}
+
+		if (ui_name.match(/^@/))
+		{
+			ui_name=ui_name.substr(1);
+			override=true;
+		}
+		/*标准扩展控件*/
+		if (atd.ui.register[ui_name] && !override){
+			var std_ui=new atd.ui.register[ui_name]();
+			if (std_ui.setAttrs) std_ui.setAttrs(attrs);
+			if (std_ui.bindEvent) std_ui.bindEvent(events);
+			if (std_ui.addChild) {
+				for (var i in child_objects){
+					if (typeof child_objects[i] === 'string'){
+						std_ui.addChild(atd.doc.createTextNode(child_objects[i]));
+					}
+					else{
+						std_ui.addChild(createUI(child_objects[i],eventbind));
+					}
+				}
+			}
+			if (catch_id){
+				catch_object[catch_id]=std_ui.render();
+				return catch_object[catch_id];
+			}
+			return std_ui.render();
+		}else{
+
+			/*原生控件*/
+			var native_ui=atd.tool.element(ui_name);
+			atd.tool.objAttrs(native_ui,attrs);
+			atd.tool.objOn(native_ui,events);
+			for (var i in child_objects){
+				if (typeof child_objects[i] === 'string'){
+					native_ui.appendChild(atd.doc.createTextNode(child_objects[i]));
+				}
+				else{
+					native_ui.appendChild(createUI(child_objects[i],eventbind));
+				}
+			}
+			if (catch_id){
+				catch_object[catch_id]=native_ui;
+			}
+			return native_ui;
+		}
+	}
+
+	if (atd.tool.isArray(json))
+	{
+		for (var i in json)
+			body.appendChild(createUI(json[i],eventbind));
+	}
+	else
+		body.appendChild(createUI(json,eventbind));
+	return catch_object;
 }

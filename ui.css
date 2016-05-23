@@ -9,12 +9,6 @@ html,body{
 	height:20em;
 }
 
-
-#btn-popinfo:hover {
-    background-color:  #f44336;
-    color: white;
-}
-
 .popinfo
 {
 	background-color: #1ea0fd;

@@ -2,8 +2,10 @@
 // 工具集
 'use strict';
 atd.tool={};
-atd.tool.setAttrs=function(obj,attrs)
+atd.tool.objAttrs=function(obj,attrs)
 {
+ 	if (arguments.length<2)
+	throw 'atd.tool.objAttrs must have two arguments';
 	if (typeof obj === 'string')
 	{
 		obj=atd.doc.createElement(obj);
@@ -35,6 +37,8 @@ atd.tool.prefixName=function(name)
 
 atd.tool.objCss=function(obj,cssObj)
 {
+	if (arguments.length<2)
+		throw 'atd.tool.objCss must have two arguments';
 	for (var name in cssObj) {
 		obj.style[atd.tool.prefixName(name)]=cssObj[name];
 	}
@@ -51,13 +55,33 @@ atd.tool.each=function(array, func)
         }
     }
 }
+atd.tool.objChild=function(obj,objChild)
+{
+	if (typeof objChild === 'object')
+		return obj.appendChild(objChild);
+	else if (typeof objChild === 'string')
+		return obj.appendChild(document.createTextNode(objChild));
+	else if (atd.tool.isArray(objChild))
+	{
+		for (var i in objChild) {
+			atd.tool.objChild(obj,objChild);
+		}
+	}
+	return obj;
+}
 atd.tool.objOn=function(obj,eventObj)
 {
+	if (arguments.length<2)
+		throw 'atd.tool.objCss must have two arguments';
 	function bind(objbind,event,callback){
-		if (objbind.addEventListener)
- 		  	objbind.addEventListener(event,callback,false);
-  		else
-  			objbind.attachEvent('on'+name,callback);
+		if (event.match(/^on(.+?)$/)){
+			objbind[event]=callback;
+		}else{
+			if (objbind.addEventListener)
+ 		  		objbind.addEventListener(event,callback,false);
+  			else
+  				objbind.attachEvent('on'+event,callback);
+		}
 	}
 
 	if (obj)
@@ -88,7 +112,7 @@ atd.tool.createCssString=function (cssObj)
 }
 
 atd.tool.element=function (name,attrs,css) {
-	var obj=atd.tool.setAttrs(name,attrs);
+	var obj=atd.tool.objAttrs(name,attrs);
 	return atd.tool.objCss(obj,css);
 }
 
