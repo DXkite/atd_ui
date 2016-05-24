@@ -1,7 +1,11 @@
-'use strict';
+'use strict'; //开启Javascript严格模式
+// 监听事件 on xxx
+// window.onload 事件
 atd.tool.objOn(window,{'load':
 function(){
+	// 创建的容器
 	var ctr=document.getElementById('htmlcreater');
+	// 自定义的控件
 	function button_object()
 	{
 		var text='Button';
@@ -48,15 +52,19 @@ function(){
 			return _root;
 		}
 	}
-
+	// 注册控件
 	atd.ui.UIRegister('button',button_object);
+
+
 	console.time('createHTML');
- 	var get=atd.ui.UIBuilder(ctr,
+	// 在ctr上创建界面
+ 	atd.ui.UIBuilder(ctr, //界面生成被绑定的div
  	[
  		{
- 	 		$:'button',
- 	 		text:'Hello World',
- 	 		click:function()
+ 	 		$:'button', //控件名
+ 	 		text:'Hello World', //控件属性
+ 	 		// 事件绑定
+ 	 		click:function() 
  	 		{
  	 			atd.ui.PopTip('Click Events On Button').show();
  	 		},
@@ -66,6 +74,4 @@ function(){
  	 		},
  	 	},
  	 ]);
-
- 	console.dir(ctr);
 }});
