@@ -141,7 +141,7 @@ atd.tool.css=function(name,css) {
 	return css;
 }
 
-// localStorage 缓存
+// localStorage 缓存 CSS
 atd.tool.cacheCss=function(name,callback) {
 	if (typeof name!== 'string' )
 		throw ('atd.tool.cacheCss:name must be string!');

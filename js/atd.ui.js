@@ -102,6 +102,7 @@ atd.ui.PopTip=function(text,time,attr,css)
 			'text-algin':'center',
 			transition:'0.3s',
 			opacity:0,
+			border:0,
 		};
 	// 顺序队列
 	if (!atd.ui.PopTipQueue)
@@ -126,7 +127,7 @@ atd.ui.PopTip=function(text,time,attr,css)
 			var timeout=next.time || 2000;
 			var close=function()
 			{
-				atd.tool.objCss(div,{'transition':'0.3s ease-out',opacity:0});
+				atd.tool.objCss(div,{'transition':'opacity 0.3s ease-out',opacity:0});
 				setTimeout(function(){
 					atd.doc.body.removeChild(div);
 					show();	
@@ -135,9 +136,11 @@ atd.ui.PopTip=function(text,time,attr,css)
 				},300);
 			}		
 			atd.doc.body.appendChild(div);
-			div.style.left=(atd.doc.body.clientWidth/2-div.clientWidth/2)+'px';
-			div.style.bottom='1em';
-			setTimeout(function(){atd.tool.objCss(div,{opacity:1,transition:'0.1s ease-in'});},100);
+			var margin=(atd.doc.body.offsetWidth/2-div.offsetWidth/2)+'px';
+			div.style.marginLeft=margin;
+			div.style.marginRight=margin;
+			div.style.bottom='3em';
+			setTimeout(function(){atd.tool.objCss(div,{opacity:1,transition:'opacity 0.1s ease-in'});},100);
 			setTimeout(close,timeout);
 		}
 	}
@@ -233,9 +236,8 @@ atd.ui.UIBuilder=function(body,json,eventbind)
 				catch_object[catch_id]=std_ui.render();
 				return catch_object[catch_id];
 			}
-			return std_ui.render();
+			return std_ui.create();
 		}else{
-
 			/*原生控件*/
 			var native_ui=atd.tool.element(ui_name);
 			atd.tool.objAttrs(native_ui,attrs);
@@ -257,8 +259,14 @@ atd.ui.UIBuilder=function(body,json,eventbind)
 
 	if (atd.tool.isArray(json))
 	{
-		for (var i in json)
-			body.appendChild(createUI(json[i],eventbind));
+		for (var i in json){
+					if (typeof json[i] === 'string'){
+				body.appendChild(atd.doc.createTextNode(json[i]));
+			}
+			else{
+				body.appendChild(createUI(json[i],eventbind));
+			}	
+		}
 	}
 	else
 		body.appendChild(createUI(json,eventbind));

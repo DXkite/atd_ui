@@ -30,7 +30,7 @@ function(){
 			    color: 'white',
 			}
 		});
-		var _root=atd.tool.element('div');
+		var _root=atd.tool.element('button');
 		this.bindEvent=function(events)
 		{
 			atd.tool.objOn(_root,events);
@@ -40,11 +40,8 @@ function(){
 			if (attrs.text)
 				text=attrs.text;
 		}
-		// this.addChild=function(childs)
-		// {
-			
-		// }
-		this.render=function()
+		// this.addChild=function(childs){}
+		this.create=function()
 		{
 			atd.tool.objAttrs(_root,{class:'button'});
 			_root.innerHTML=text;
@@ -55,17 +52,20 @@ function(){
 	atd.ui.UIRegister('button',button_object);
 	console.time('createHTML');
  	var get=atd.ui.UIBuilder(ctr,
- 	{
- 		$:'button',
- 		text:'Hello World',
- 		click:function()
+ 	[
  		{
- 			atd.ui.PopTip('Click Events On Button').show();
- 		},
- 		mouseover:function()
- 		{
- 			atd.ui.PopTip('Mouse Over Events On Button').show();
- 		}
- 	});
- 	console.timeEnd('createHTML');
+ 	 		$:'button',
+ 	 		text:'Hello World',
+ 	 		click:function()
+ 	 		{
+ 	 			atd.ui.PopTip('Click Events On Button').show();
+ 	 		},
+ 	 		mouseover:function()
+ 	 		{
+ 	 			atd.ui.PopTip('Mouse Over Events On Button').show();
+ 	 		},
+ 	 	},
+ 	 ]);
+
+ 	console.dir(ctr);
 }});
